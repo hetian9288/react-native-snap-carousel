@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { ScrollView, Animated, Platform, Easing, I18nManager } from 'react-native';
-import shallowCompare from 'react-addons-shallow-compare';
 import _debounce from 'lodash.debounce';
 
 // React Native automatically handles RTL layouts; unfortunately, it's buggy with horizontal ScrollView
@@ -11,8 +10,7 @@ import _debounce from 'lodash.debounce';
 // otherwise it is undefined at init, which messes with custom indexes
 const IS_RTL = I18nManager.isRTL;
 
-export default class Carousel extends Component {
-
+export default class Carousel extends PureComponent {
     static propTypes = {
         ...ScrollView.propTypes,
         /**
@@ -239,13 +237,13 @@ export default class Carousel extends Component {
         }, 0);
     }
 
-    shouldComponentUpdate (nextProps, nextState) {
-        if (this.props.shouldOptimizeUpdates === false) {
-            return true;
-        } else {
-            return shallowCompare(this, nextProps, nextState);
-        }
-    }
+    // shouldComponentUpdate (nextProps, nextState) {
+    //     if (this.props.shouldOptimizeUpdates === false) {
+    //         return true;
+    //     } else {
+    //         return shallowCompare(this, nextProps, nextState);
+    //     }
+    // }
 
     componentWillReceiveProps (nextProps) {
         const { activeItem, interpolators } = this.state;
@@ -672,11 +670,10 @@ export default class Carousel extends Component {
                     }
                 }, scrollEndDragDebounceValue + 50);
             }
-
             this._scrollview.scrollTo({
                 x: vertical ? 0 : snapTo,
                 y: vertical ? snapTo : 0,
-                animated
+		            animated
             });
 
             // iOS fix, check the note in the constructor
